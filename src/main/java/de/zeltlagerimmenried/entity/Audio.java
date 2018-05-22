@@ -9,9 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 
 
 @Entity
@@ -31,10 +30,11 @@ public class Audio {
 	@Column(length=20971520)
 	private byte[] audio;
 	
-	
-	@ManyToOne(optional=false, fetch=FetchType.LAZY)
-	@JoinColumn(name="idTeam")
-	private Team team;
+	@Column(nullable = false)
+	private Boolean active;
+		
+	@Column(nullable = false)
+	private Integer idTeam;
 
 	//SETTER & GETTER
 	public Integer getIdAudio() {
@@ -56,7 +56,7 @@ public class Audio {
 		this.name = name;
 	}
 
-	
+
 	public LocalDateTime getUpdateDateTime() {
 		return updateDateTime;
 	}
@@ -77,15 +77,23 @@ public class Audio {
 	}
 
 
-	public Team getTeam() {
-		return team;
+	public Boolean getActive() {
+		return active;
 	}
 
 
-	public void setTeam(Team team) {
-		this.team = team;
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 
+	public Integer getIdTeam() {
+		return idTeam;
+	}
+
+
+	public void setIdTeam(Integer idTeam) {
+		this.idTeam = idTeam;
+	}
 
 }

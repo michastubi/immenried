@@ -1,12 +1,17 @@
 package de.zeltlagerimmenried.controller;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -48,7 +53,21 @@ public class TeamController {
 		return new Integer(randomNumber);
 	}
 	
-	@PostMapping(path = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/game/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody List<Team> getTeamGame(@PathVariable Integer id) {
+		Optional<Game> optionalGame = gameRepository.findByIdGame(id);
+		
+		try {
+			Game game = optionalGame.get();
+			return game.getTeams();
+			}
+			catch(Exception e) {
+				System.out.println(e.getMessage());
+				return null;
+			}
+	}
+	
+	@PostMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object addNewTeam(@RequestBody Team team) {
 		Team newTeam = new Team();
 		
@@ -73,13 +92,18 @@ public class TeamController {
 	}
 	
 	
-	@PostMapping(path = "/changename", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object changeTeamName(@RequestBody Team postTeam) {
-		Optional<Team> optionalTeam = teamRepository.findByIdTeam(postTeam.getIdTeam());
+	@PutMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object changeTeamName(@RequestBody Team putTeam) {
+		Optional<Team> optionalTeam = teamRepository.findByIdTeam(putTeam.getIdTeam());
 		
 		try {
 			Team team = optionalTeam.get();
-			team.setName(postTeam.getName());
+			team.setName(putTeam.getName());
+			team.setFotoCount(putTeam.getFotoCount());
+			team.setOrtungCount(putTeam.getOrtungCount());
+			team.setAbhoerenCount(putTeam.getAbhoerenCount());
+			team.setProviantRequest(putTeam.getProviantRequest());
+			
 			teamRepository.save(team);
 			return team;
 			}
@@ -93,7 +117,7 @@ public class TeamController {
 		
 	}
 	
-	@PostMapping(path = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ReturnMessage deleteTeam(@RequestBody Team team) {
 		ReturnMessage msg = new ReturnMessage();
 		Optional<Team> optionalDeleteTeam = teamRepository.findByIdTeam(team.getIdTeam());

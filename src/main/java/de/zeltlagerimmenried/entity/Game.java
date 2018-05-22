@@ -23,7 +23,7 @@ public class Game {
 	private String name;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "idTeam")
+	@JoinColumn(name = "idGame")
 	private List<Team> teams = new ArrayList<>();
 
 	
