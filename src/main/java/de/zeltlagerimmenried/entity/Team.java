@@ -37,9 +37,8 @@ public class Team {
 	@Column(nullable = false)
 	private Boolean proviantRequest;
 	
-	@ManyToOne(optional=false, fetch=FetchType.LAZY)
-	@JoinColumn(name="idGame")
-	private Game game;
+	@Column(nullable = false)
+	private Integer idGame;
 
 	
 	//SETTER & GETTER
@@ -107,15 +106,12 @@ public class Team {
 		this.proviantRequest = proviantRequest;
 	}
 
-	public Game getGame() {
-		return game;
+	public Integer getIdGame() {
+		return idGame;
 	}
 
-	public void setGame(Game game) {
-		this.game = game;
+	public void setIdGame(Integer idGame) {
+		this.idGame = idGame;
 	}
-	
-	
-	
 
 }

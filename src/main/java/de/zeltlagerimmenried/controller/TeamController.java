@@ -27,33 +27,6 @@ public class TeamController {
 	@Autowired
 	private GameRepository gameRepository;
 
-	
-	@PostMapping(path = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object addNewGame(@RequestBody Team team) {
-		Team newTeam = new Team();
-		
-		newTeam.setName(team.getName());
-		newTeam.setAbhoerenCount(team.getAbhoerenCount());
-		newTeam.setFotoCount(team.getFotoCount());
-		newTeam.setOrtungCount(team.getOrtungCount());
-		newTeam.setProviantRequest(team.getProviantRequest());
-		newTeam.setMitarbeiterPin(this.giveUnusedPin());
-		newTeam.setTeamPin(this.giveUnusedPin());
-		
-		try {
-		Optional<Game> optionalGame = gameRepository.findByIdGame(team.getGame().getIdGame());
-		Game game = optionalGame.get();
-		newTeam.setGame(game);
-		}
-		catch(Exception e) {
-			System.out.println(e.getMessage());
-			return new ReturnMessage(e.getMessage() + ": Wrong Game ID");
-		}
-
-		teamRepository.save(newTeam);
-		return newTeam;
-	}
-	
 	private Integer giveUnusedPin() {
 		Random rand = new Random();
 		int randomNumber;
@@ -75,15 +48,59 @@ public class TeamController {
 		return new Integer(randomNumber);
 	}
 	
+	@PostMapping(path = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object addNewTeam(@RequestBody Team team) {
+		Team newTeam = new Team();
+		
+		newTeam.setName(team.getName());
+		newTeam.setAbhoerenCount(team.getAbhoerenCount());
+		newTeam.setFotoCount(team.getFotoCount());
+		newTeam.setOrtungCount(team.getOrtungCount());
+		newTeam.setProviantRequest(team.getProviantRequest());
+		newTeam.setMitarbeiterPin(this.giveUnusedPin());
+		newTeam.setTeamPin(this.giveUnusedPin());
+		
+		Optional<Game> optionalGame = gameRepository.findByIdGame(team.getIdGame());
+		if(optionalGame.isPresent()) {
+			newTeam.setIdGame(team.getIdGame());
+		}
+		else {
+			return new ReturnMessage("Error: Wrong Game ID");
+		}
+
+		teamRepository.save(newTeam);
+		return newTeam;
+	}
 	
-	/*@PostMapping(path = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ReturnMessage deleteGame(@RequestBody Game game) {
-		ReturnMessage msg = new ReturnMessage();
-		Optional<Game> optionalDeleteGame = gameRepository.findByIdGame(game.getIdGame());
+	
+	@PostMapping(path = "/changename", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object changeTeamName(@RequestBody Team postTeam) {
+		Optional<Team> optionalTeam = teamRepository.findByIdTeam(postTeam.getIdTeam());
 		
 		try {
-		Game deleteGame = optionalDeleteGame.get();
-		gameRepository.delete(deleteGame);
+			Team team = optionalTeam.get();
+			team.setName(postTeam.getName());
+			teamRepository.save(team);
+			return team;
+			}
+			catch(Exception e) {
+				System.out.println(e.getMessage());
+				return new ReturnMessage(e.getMessage() + ": Wrong Team ID");
+				
+			}
+		
+		
+		
+	}
+	
+	@PostMapping(path = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ReturnMessage deleteTeam(@RequestBody Team team) {
+		ReturnMessage msg = new ReturnMessage();
+		Optional<Team> optionalDeleteTeam = teamRepository.findByIdTeam(team.getIdTeam());
+		
+		try {
+		Team deleteTeam = optionalDeleteTeam.get();
+		teamRepository.delete(deleteTeam);
 		msg.setSuccess();
 		}
 		catch(Exception e) {
@@ -92,6 +109,6 @@ public class TeamController {
 		}
 		
 		return msg;
-	}*/
+	}
 	
 }
