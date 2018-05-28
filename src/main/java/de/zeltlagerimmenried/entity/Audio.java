@@ -23,7 +23,7 @@ public class Audio {
 	@Column(nullable = false, columnDefinition = "VARCHAR(45)")
 	private String name;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private LocalDateTime updateDateTime;
 
 	@Lob @Basic(fetch = FetchType.LAZY)

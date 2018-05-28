@@ -9,9 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class Picture {
@@ -20,20 +18,18 @@ public class Picture {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer idPicture;
 	
-	@Column(nullable = false, columnDefinition = "VARCHAR(45)")
-	private String name;
-	
 	@Column(nullable = false)
-	private LocalDateTime updateDateTime;
+	private LocalDateTime dateTime;
+	
+	@Column(nullable = false, columnDefinition = "VARCHAR(45)")
+	private String fileExtension;
 
 	@Lob @Basic(fetch = FetchType.LAZY)
 	@Column(length=1048576)
 	private byte[] picture;
 	
-	
-	@ManyToOne(optional=false, fetch=FetchType.LAZY)
-	@JoinColumn(name="idTeam")
-	private Team team;
+	@Column(nullable = false)
+	private Integer idTeam;
 
 	//SETTER & GETTER
 	public Integer getIdPicture() {
@@ -46,23 +42,23 @@ public class Picture {
 	}
 
 
-	public String getName() {
-		return name;
+	public LocalDateTime getDateTime() {
+		return dateTime;
 	}
 
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	
-	public LocalDateTime getUpdateDateTime() {
-		return updateDateTime;
+	public String getFileExtension() {
+		return fileExtension;
 	}
 
 
-	public void setUpdateDateTime(LocalDateTime updateDateTime) {
-		this.updateDateTime = updateDateTime;
+	public void setFileExtension(String fileExtension) {
+		this.fileExtension = fileExtension;
+	}
+
+
+	public void setDateTime(LocalDateTime dateTime) {
+		this.dateTime = dateTime;
 	}
 
 
@@ -76,13 +72,14 @@ public class Picture {
 	}
 
 
-	public Team getTeam() {
-		return team;
+	public Integer getIdTeam() {
+		return idTeam;
 	}
 
 
-	public void setTeam(Team team) {
-		this.team = team;
+	public void setIdTeam(Integer idTeam) {
+		this.idTeam = idTeam;
 	}
+
 	
 }

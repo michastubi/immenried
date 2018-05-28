@@ -9,6 +9,6 @@ import de.zeltlagerimmenried.entity.Audio;
 public interface AudioRepository extends CrudRepository<Audio, Long>{
 	Optional<Audio> findByIdAudio(Integer idAudio);
 	List<Audio> findByIdTeamOrderByNameAsc(Integer idTeam);
-	Optional<Audio> findByIdTeamAndActive(Integer idTeam, Boolean active);
+	List<Audio> findByIdTeamAndActive(Integer idTeam, Boolean active);
 	
 }
