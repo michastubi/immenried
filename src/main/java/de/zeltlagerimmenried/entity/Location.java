@@ -4,12 +4,9 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,7 +15,7 @@ public class Location {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer Id;
+	private Integer idLocation;
 	
 	@Column(nullable = false)
 	private Double latitude;
@@ -33,19 +30,19 @@ public class Location {
 	@Column(nullable = false)
 	private Boolean mitarbeiter;
 	
-	@ManyToOne(optional=false, fetch=FetchType.LAZY)
-	@JoinColumn(name="idTeam")
-	private Team team;
+	@Column(nullable = false)
+	private Integer idTeam;
 
 	//SETTER & GETTER
-	public Integer getId() {
-		return Id;
+	
+	public Integer getIdLocation() {
+		return idLocation;
 	}
 
-	public void setId(Integer id) {
-		Id = id;
+	public void setIdLocation(Integer idLocation) {
+		this.idLocation = idLocation;
 	}
-
+	
 	public Double getLatitude() {
 		return latitude;
 	}
@@ -78,12 +75,12 @@ public class Location {
 		this.mitarbeiter = mitarbeiter;
 	}
 
-	public Team getTeam() {
-		return team;
+	public Integer getIdTeam() {
+		return idTeam;
 	}
 
-	public void setTeam(Team team) {
-		this.team = team;
+	public void setIdTeam(Integer idTeam) {
+		this.idTeam = idTeam;
 	}
 	
 }

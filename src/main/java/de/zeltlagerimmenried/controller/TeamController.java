@@ -54,7 +54,7 @@ public class TeamController {
 	}
 	
 	@GetMapping(path = "/game/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<Team> getTeamGame(@PathVariable Integer id) {
+	public @ResponseBody List<Team> getTeamById(@PathVariable Integer id) {
 		Optional<Game> optionalGame = gameRepository.findByIdGame(id);
 		
 		try {
@@ -66,6 +66,23 @@ public class TeamController {
 				return null;
 			}
 	}
+	
+	@GetMapping(path = "/code/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Team getTeamByCode(@PathVariable Integer code) {
+		Optional<Team> optionalTeam = teamRepository.findByTeamPin(code);
+		if(!optionalTeam.isPresent()) {
+			optionalTeam = teamRepository.findByMitarbeiterPin(code);
+		}
+		
+		try {
+			Team team = optionalTeam.get();
+			return team;
+			}
+			catch(Exception e) {
+				System.out.println(e.getMessage());
+				return null;
+			}
+	}	
 	
 	@PostMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object addNewTeam(@RequestBody Team team) {
