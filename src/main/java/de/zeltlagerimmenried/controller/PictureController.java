@@ -3,9 +3,11 @@ package de.zeltlagerimmenried.controller;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import de.zeltlagerimmenried.dto.PictureDto;
+import de.zeltlagerimmenried.dto.PictureUploadDto;
 import de.zeltlagerimmenried.entity.Picture;
 import de.zeltlagerimmenried.helper.ReturnMessage;
 import de.zeltlagerimmenried.repository.PictureRepository;
@@ -66,8 +69,12 @@ public class PictureController {
 	@GetMapping(path = "/file/id/{id}")
 	public void getPictureFile(@PathVariable Integer id, HttpServletResponse response) {
 		Optional<Picture> optionalPicture = pictureRepository.findByIdPicture(id);
+		
 		try {
 			Picture picture = optionalPicture.get();
+			if(picture.getPicture() == null) {
+				return;
+			}
 			// Get your file stream from wherever.
 			ByteArrayInputStream stream = new ByteArrayInputStream(picture.getPicture());
 
@@ -120,32 +127,35 @@ public class PictureController {
 	}
 	
 	@PostMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object addNewPicture(@RequestBody Picture picture) {
+	public @ResponseBody Object addNewPicture(@RequestBody PictureUploadDto picture) {
 		//Delete old Picture
 		Optional<Picture> optionalPicture = pictureRepository.findByIdTeam(picture.getIdTeam());
 		try {
-			Picture oldPicture = optionalPicture.get();
-			pictureRepository.delete(oldPicture);
+			Picture newPicture = new Picture();
+			
+			newPicture.setDateTime(LocalDateTime.now());
+			newPicture.setFileExtension(picture.getFileExtension());
+			newPicture.setIdTeam(picture.getIdTeam());
+			newPicture.getPicture();
+			newPicture.setPicture(Base64.decodeBase64(picture.getFile()));
+			
+			if(optionalPicture.isPresent()) {
+				Picture oldPicture = optionalPicture.get();
+				pictureRepository.delete(oldPicture);
+			}
+			pictureRepository.save(newPicture);
 			}
 			catch(Exception e) {
-				System.out.println("No old Picture");
+				e.printStackTrace();
+				System.out.println("addNewPicture: Error");
 				
 			}
 		
-		Picture newPicture = new Picture();
-		
-		newPicture.setDateTime(picture.getDateTime());
-		newPicture.setFileExtension(picture.getFileExtension());
-		newPicture.setIdTeam(picture.getIdTeam());
-		newPicture.setPicture(null);
-		
-		pictureRepository.save(newPicture);
-		
-		return newPicture;
+		return new ReturnMessage("Picture Upload complete");
 	}
 	
 	@PostMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object addNewPictureFile(@PathVariable Integer id, @RequestParam("File") MultipartFile file) {
+	public @ResponseBody Object addNewPictureFile(@PathVariable Integer id, @RequestParam("File") String file) {
 		Optional<Picture> optionalPicture = pictureRepository.findByIdPicture(id);
 		Picture picture = null;
 		byte[] pictureBytes = null;
@@ -156,12 +166,9 @@ public class PictureController {
 			return new ReturnMessage(e.getMessage() + ": Wrong Picture ID");
 		}
 		
-		try {
-			pictureBytes = file.getBytes();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return new ReturnMessage(e.getMessage());
-		}
+		
+		pictureBytes = file.getBytes();
+		
 		
 		picture.getPicture();
 		picture.setPicture(pictureBytes);
@@ -182,7 +189,7 @@ public class PictureController {
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
-			msg.setMessage(e.getMessage());
+			msg.setStatus(e.getMessage());
 		}
 		
 		return msg;

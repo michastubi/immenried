@@ -67,6 +67,19 @@ public class LocationController {
 			}
 	}
 	
+	
+	@GetMapping(path = "/current/all", produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object getCurrentLocationFromAll() {
+		List<Location> listLocation = locationRepository.findLocation();
+		
+		if (listLocation.isEmpty()) {
+			return new ReturnMessage("No Locations found");
+		}
+		else {
+			return listLocation;
+		}
+	}
+	
 	@PostMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object addNewLocation(@RequestBody Location location) {
 		Location newLocation = new Location();
@@ -94,7 +107,7 @@ public class LocationController {
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
-			msg.setMessage(e.getMessage());
+			msg.setStatus(e.getMessage());
 		}
 		
 		return msg;

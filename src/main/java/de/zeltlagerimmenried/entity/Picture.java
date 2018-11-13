@@ -11,14 +11,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 
+import de.zeltlagerimmenried.helper.ReturnMessage;
+
 @Entity
-public class Picture {
+public class Picture extends ReturnMessage  {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer idPicture;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private LocalDateTime dateTime;
 	
 	@Column(nullable = false, columnDefinition = "VARCHAR(45)")

@@ -12,8 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
+import de.zeltlagerimmenried.helper.ReturnMessage;
+
 @Entity
-public class Game {
+public class Game  extends ReturnMessage  {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

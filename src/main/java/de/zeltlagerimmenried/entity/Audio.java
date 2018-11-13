@@ -12,9 +12,11 @@ import javax.persistence.Id;
 
 import javax.persistence.Lob;
 
+import de.zeltlagerimmenried.helper.ReturnMessage;
+
 
 @Entity
-public class Audio {
+public class Audio  extends ReturnMessage  {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

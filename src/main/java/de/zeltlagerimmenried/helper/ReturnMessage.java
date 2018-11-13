@@ -2,33 +2,34 @@ package de.zeltlagerimmenried.helper;
 
 public class ReturnMessage {
 
-	private String message;
+	private String status;
 	
 	public ReturnMessage(){
+		status = "success";
 	}
 	
 	public ReturnMessage(boolean success){
 		if (success) {
-			message = "success";
+			status = "success";
 		}
 		else {
-			message = "failure";
+			status = "error";
 		}
 	}
 	
 	public ReturnMessage(String msg){
-		this.setMessage(msg);
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
+		this.setStatus(msg);
 	}
 	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public void setSuccess() {
-		this.message = "Success";
+		this.status = "success";
 	}
 }

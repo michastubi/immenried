@@ -10,8 +10,10 @@ import javax.persistence.Id;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
+import de.zeltlagerimmenried.helper.ReturnMessage;
+
 @Entity
-public class Location {
+public class Location extends ReturnMessage  {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -23,7 +25,7 @@ public class Location {
 	@Column(nullable = false)
 	private Double longitude;
 	
-	@Column(nullable = false)
+	@Column(nullable = true)
 	@UpdateTimestamp
 	private LocalDateTime updateDateTime;
 	

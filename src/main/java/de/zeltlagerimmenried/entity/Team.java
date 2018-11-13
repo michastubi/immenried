@@ -6,9 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import de.zeltlagerimmenried.helper.ReturnMessage;
+
 
 @Entity
-public class Team {
+public class Team extends ReturnMessage {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

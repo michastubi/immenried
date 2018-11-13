@@ -68,7 +68,7 @@ public class TeamController {
 	}
 	
 	@GetMapping(path = "/code/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Team getTeamByCode(@PathVariable Integer code) {
+	public @ResponseBody Object getTeamByCode(@PathVariable Integer code) {
 		Optional<Team> optionalTeam = teamRepository.findByTeamPin(code);
 		if(!optionalTeam.isPresent()) {
 			optionalTeam = teamRepository.findByMitarbeiterPin(code);
@@ -80,7 +80,7 @@ public class TeamController {
 			}
 			catch(Exception e) {
 				System.out.println(e.getMessage());
-				return null;
+				return new ReturnMessage("WrongCode");
 			}
 	}	
 	
@@ -115,11 +115,9 @@ public class TeamController {
 		
 		try {
 			Team team = optionalTeam.get();
-			team.setName(putTeam.getName());
 			team.setFotoCount(putTeam.getFotoCount());
 			team.setOrtungCount(putTeam.getOrtungCount());
 			team.setAbhoerenCount(putTeam.getAbhoerenCount());
-			team.setProviantRequest(putTeam.getProviantRequest());
 			
 			teamRepository.save(team);
 			return team;
@@ -146,7 +144,7 @@ public class TeamController {
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
-			msg.setMessage(e.getMessage());
+			msg.setStatus(e.getMessage());
 		}
 		
 		return msg;

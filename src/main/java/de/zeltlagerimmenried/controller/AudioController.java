@@ -147,7 +147,7 @@ public class AudioController {
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
-			msg.setMessage(e.getMessage());
+			msg.setStatus(e.getMessage());
 			return msg;
 		}
 		
@@ -177,7 +177,7 @@ public class AudioController {
 		}
 		catch(Exception e) {
 			System.out.println(e.getMessage());
-			msg.setMessage(e.getMessage());
+			msg.setStatus(e.getMessage());
 		}
 		
 		return msg;
